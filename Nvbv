@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор прогнозов NB-BET</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-teal-800: rgba(41, 150, 161, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-red-400-rgb: 255, 84, 89;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-orange-400-rgb: 230, 129, 97;
+
+            --color-bg-1: rgba(59, 130, 246, 0.08);
+            --color-bg-2: rgba(245, 158, 11, 0.08);
+            --color-bg-3: rgba(34, 197, 94, 0.08);
+            --color-bg-4: rgba(239, 68, 68, 0.08);
+            --color-bg-5: rgba(147, 51, 234, 0.08);
+            --color-bg-6: rgba(249, 115, 22, 0.08);
+            --color-bg-7: rgba(236, 72, 153, 0.08);
+            --color-bg-8: rgba(6, 182, 212, 0.08);
+
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --color-info: var(--color-slate-500);
+            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+            --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+            --focus-ring: 0 0 0 3px var(--color-focus-ring);
+            --focus-outline: 2px solid var(--color-primary);
+            --status-bg-opacity: 0.15;
+            --status-border-opacity: 0.25;
+
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            --font-size-xs: 11px;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-md: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.5;
+            --letter-spacing-tight: -0.01em;
+
+            --space-0: 0;
+            --space-1: 1px;
+            --space-2: 2px;
+            --space-4: 4px;
+            --space-6: 6px;
+            --space-8: 8px;
+            --space-10: 10px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+
+            --radius-sm: 6px;
+            --radius-base: 8px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
+                0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
+                0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+
+            --container-sm: 640px;
+            --container-md: 768px;
+            --container-lg: 1024px;
+            --container-xl: 1280px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+
+                --color-bg-1: rgba(29, 78, 216, 0.15);
+                --color-bg-2: rgba(180, 83, 9, 0.15);
+                --color-bg-3: rgba(21, 128, 61, 0.15);
+                --color-bg-4: rgba(185, 28, 28, 0.15);
+                --color-bg-5: rgba(107, 33, 168, 0.15);
+                --color-bg-6: rgba(194, 65, 12, 0.15);
+                --color-bg-7: rgba(190, 24, 93, 0.15);
+                --color-bg-8: rgba(8, 145, 178, 0.15);
+
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-primary-active: var(--color-teal-800);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-warning: var(--color-orange-400);
+                --color-info: var(--color-gray-300);
+                --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+                --color-btn-primary-text: var(--color-slate-900);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+                --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+                --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+            }
+        }
+
+        html {
+            font-size: var(--font-size-base);
+            font-family: var(--font-family-base);
+            line-height: var(--line-height-normal);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: var(--space-20);
+            min-height: 100vh;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 0;
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-tight);
+            color: var(--color-text);
+            letter-spacing: var(--letter-spacing-tight);
+        }
+
+        h1 {
+            font-size: var(--font-size-4xl);
+        }
+        h2 {
+            font-size: var(--font-size-3xl);
+        }
+        h3 {
+            font-size: var(--font-size-2xl);
+        }
+
+        p {
+            margin: 0 0 var(--space-16) 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: var(--space-12);
+            font-size: var(--font-size-lg);
+            line-height: 1.5;
+            color: var(--color-text);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            transition: border-color var(--duration-fast) var(--ease-standard),
+                box-shadow var(--duration-fast) var(--ease-standard);
+        }
+
+        .form-control:focus {
+            border-color: var(--color-primary);
+            outline: var(--focus-outline);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-8);
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-md);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-20);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: var(--space-16);
+            }
+            
+            h1 {
+                font-size: var(--font-size-3xl);
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-16) var(--space-24);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            line-height: 1.5;
+            cursor: pointer;
+            transition: all var(--duration-normal) var(--ease-standard);
+            border: none;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .btn--primary {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+        }
+
+        .btn--primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn--primary:active {
+            background: var(--color-primary-active);
+            transform: translateY(1px);
+        }
+
+        .btn--full-width {
+            width: 100%;
+        }
+
+        .card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            margin-bottom: var(--space-24);
+        }
+
+        .card__body {
+            padding: var(--space-24);
+        }
+
+        @media (max-width: 640px) {
+            .card__body {
+                padding: var(--space-20);
+            }
+        }
+
+        .results {
+            margin-top: var(--space-32);
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-section {
+            margin-bottom: var(--space-20);
+            padding: var(--space-20);
+            background: var(--color-bg-1);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-card-border);
+        }
+
+        .result-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-16);
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+        }
+
+        .calculation-line {
+            font-family: var(--font-family-mono);
+            font-size: var(--font-size-md);
+            margin: var(--space-12) 0;
+            padding: var(--space-12);
+            background: var(--color-surface);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--color-card-border-inner);
+            line-height: 1.4;
+        }
+
+        .prediction-score {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            text-align: center;
+            margin: var(--space-20) 0;
+            color: var(--color-primary);
+            line-height: 1.1;
+        }
+
+        .recommendations {
+            background: var(--color-bg-3);
+        }
+
+        .rec-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-12);
+            margin: var(--space-12) 0;
+            font-size: var(--font-size-md);
+            padding: var(--space-8) 0;
+        }
+
+        .confidence-high {
+            background: var(--color-bg-3);
+        }
+
+        .confidence-medium {
+            background: var(--color-bg-2);
+        }
+
+        .confidence-low {
+            background: var(--color-bg-4);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: var(--space-20);
+        }
+
+        .loading.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card__body">
+                <h1>⚽ Калькулятор прогнозов NB-BET</h1>
+                <p>Введите данные для расчета прогноза по стратегии NB-BET</p>
+                
+                <form id="predictionForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="homeTeam">🏠 Домашняя команда</label>
+                            <input type="text" id="homeTeam" class="form-control" placeholder="Например: Краснодар" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="awayTeam">🛫 Гостевая команда</label>
+                            <input type="text" id="awayTeam" class="form-control" placeholder="Например: Локомотив" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="league">🏆 Лига</label>
+                        <input type="text" id="league" class="form-control" placeholder="Например: РПЛ" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="avgTotal">📊 Средний тотал лиги</label>
+                        <input type="number" step="0.1" id="avgTotal" class="form-control" placeholder="Например: 2.7" required>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="homeGoals">🏠 Голы домашней команды дома</label>
+                            <input type="number" id="homeGoals" class="form-control" placeholder="Например: 14" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="awayGoals">🛫 Голы гостевой команды в гостях</label>
+                            <input type="number" id="awayGoals" class="form-control" placeholder="Например: 16" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="opponentConcededAway">📉 Пропущенные соперником домашней команды в гостях</label>
+                            <input type="number" id="opponentConcededAway" class="form-control" placeholder="Например: 16" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="opponentConcededHome">📉 Пропущенные соперником гостевой команды дома</label>
+                            <input type="number" id="opponentConcededHome" class="form-control" placeholder="Например: 12" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn--primary btn--full-width">
+                        🎯 Рассчитать прогноз
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="card">
+                <div class="card__body">
+                    <p>⏳ Производим расчеты...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="results" class="results">
+            <div class="card">
+                <div class="card__body">
+                    <div id="resultsContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculatePrediction();
+        });
+
+        function calculatePrediction() {
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+            
+            setTimeout(() => {
+                const homeTeam = document.getElementById('homeTeam').value;
+                const awayTeam = document.getElementById('awayTeam').value;
+                const league = document.getElementById('league').value;
+                const avgTotal = parseFloat(document.getElementById('avgTotal').value);
+                const homeGoals = parseInt(document.getElementById('homeGoals').value);
+                const awayGoals = parseInt(document.getElementById('awayGoals').value);
+                const opponentConcededAway = parseInt(document.getElementById('opponentConcededAway').value);
+                const opponentConcededHome = parseInt(document.getElementById('opponentConcededHome').value);
+
+                const baseValue = (avgTotal / 2) * 10;
+                const homeExpected = (homeGoals + opponentConcededAway - baseValue) / 10;
+                const awayExpected = (awayGoals + opponentConcededHome - baseValue) / 10;
+                const totalExpected = homeExpected + awayExpected;
+
+                let confidence, recommendations, probability, confidenceClass;
+                
+                if (totalExpected >= 3.0) {
+                    confidence = "Высокая уверенность";
+                    recommendations = [
+                        "✅ Тотал больше 2.5, 3.0",
+                        "✅ Обе забьют - Да",
+                        "✅ Индивидуальный тотал больше 1.5"
+                    ];
+                    probability = "75-80%";
+                    confidenceClass = "confidence-high";
+                } else if (totalExpected >= 2.5) {
+                    confidence = "Средняя уверенность";
+                    recommendations = [
+                        "⚡ Тотал больше 2.5",
+                        "❓ Обе забьют - возможно",
+                        "⚡ Индивидуальный тотал больше 1.0"
+                    ];
+                    probability = "60-70%";
+                    confidenceClass = "confidence-medium";
+                } else {
+                    confidence = "Низкая уверенность";
+                    recommendations = [
+                        "❌ Тотал меньше 2.5",
+                        "❌ Обе забьют - маловероятно",
+                        "⚠️ Будьте осторожны со ставками"
+                    ];
+                    probability = "50-60%";
+                    confidenceClass = "confidence-low";
+                }
+
+                const resultsHTML = `
+                    <div class="result-section">
+                        <div class="result-title">🏟️ МАТЧ</div>
+                        <div style="font-size: var(--font-size-lg); margin-bottom: var(--space-8);"><strong>${homeTeam} - ${awayTeam}</strong></div>
+                        <div>🏆 Лига: ${league}</div>
+                        <div>📊 Средний тотал лиги: ${avgTotal}</div>
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-title">📈 РАСЧЕТЫ</div>
+                        <div class="calculation-line">
+                            🏠 <strong>${homeTeam}:</strong><br>
+                            ${homeGoals} (голы дома) + ${opponentConcededAway} (пропуски соперника) - ${baseValue.toFixed(1)} (базовое значение) = ${(homeGoals + opponentConcededAway - baseValue).toFixed(1)}<br>
+                            → <strong>${homeExpected.toFixed(1)} ожидаемых голов</strong>
+                        </div>
+                        <div class="calculation-line">
+                            🛫 <strong>${awayTeam}:</strong><br>
+                            ${awayGoals} (голы в гостях) + ${opponentConcededHome} (пропуски соперника) - ${baseValue.toFixed(1)} (базовое значение) = ${(awayGoals + opponentConcededHome - baseValue).toFixed(1)}<br>
+                            → <strong>${awayExpected.toFixed(1)} ожидаемых голов</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-title">🎯 ПРОГНОЗ</div>
+                        <div class="prediction-score">
+                            ${homeExpected.toFixed(1)} : ${awayExpected.toFixed(1)}
+                        </div>
+                        <div style="text-align: center; font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); margin-bottom: var(--space-16);">
+                            Общий тотал: <strong>${totalExpected.toFixed(1)}</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="result-section recommendations ${confidenceClass}">
+                        <div class="result-title">💡 РЕКОМЕНДАЦИИ</div>
+                        <div class="rec-item">
+                            <span>🎯</span>
+                            <span><strong>${confidence}</strong></span>
+                        </div>
+                        ${recommendations.map(rec => `
+                            <div class="rec-item">
+                                <span>${rec}</span>
+                            </div>
+                        `).join('')}
+                        <div class="rec-item">
+                            <span>📈</span>
+                            <span><strong>Вероятность успеха: ${probability}</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-title">💡 СОВЕТ</div>
+                        <div class="rec-item">
+                            <span>📝</span>
+                            <span>Всегда проверяйте актуальные составы команд и мотивацию перед заключением пари</span>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('resultsContent').innerHTML = resultsHTML;
+                document.getElementById('results').classList.add('show');
+                
+                document.getElementById('results').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 800);
+        }
+
+        window.addEventListener('load', function() {
+            document.getElementById('homeTeam').value = 'Краснодар';
+            document.getElementById('awayTeam').value = 'Локомотив';
+            document.getElementById('league').value = 'РПЛ';
+            document.getElementById('avgTotal').value = '2.7';
+            document.getElementById('homeGoals').value = '14';
+            document.getElementById('awayGoals').value = '16';
+            document.getElementById('opponentConcededAway').value = '16';
+            document.getElementById('opponentConcededHome').value = '12';
+        });
+
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+    </script>
+</body>
+</html>
